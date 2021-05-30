@@ -69,24 +69,17 @@ void StartTask03(void const * argument);
 /* USER CODE BEGIN 0 */
 void send_task (string str0)
 {
-	//char str1 [50];
-	//sprintf(str1,"%s is running...\n",str0);
-
-	//HAL_UART_Transmit(&huart2,(unsigned char*) str1, strlen(str1), 500);
 	string str1=str0+" is running...\n";
 	uint8_t str2[25];
 	copy(str1.begin(), str1.end(), begin(str2));
 	HAL_UART_Transmit(&huart2,str2, str1.length(), 500);
 }
-void send_task0 (string str0, int i)
+void send_task (string str0, int i)
 {
-	//string s=to_string(i);
 	char s='0'+i;
 	string str1=str0+" is running... Index="+ s +"\n";
 	uint8_t str2[40];
 	copy(str1.begin(), str1.end(), begin(str2));
-	//sprintf(str1,"%s is running... Index= %d\n",str0,i);
-
 	HAL_UART_Transmit(&huart2,str2, str1.length(), 500);
 }
 
@@ -290,7 +283,7 @@ void StartDefaultTask(void const * argument)
 	int j=0;
   for(;;)
   {
-	  send_task0("Default Task", j++);
+	  send_task("Default Task", j++);
 	  osDelay(2000);
 	  if(j==3)
 		  osThreadSuspend(myTask03Handle);
