@@ -9,7 +9,7 @@
 
 LedDriver::LedDriver(GPIO_TypeDef* _port)
     : GPIODevice(_port){}
-LedDriver::LedDriver(GPIO_TypeDef* _port, uint16_t pin = 5)
+LedDriver::LedDriver(GPIO_TypeDef* _port, uint16_t pin)
     : GPIODevice(_port)
 {
   configurePin(pin, Mode::Output, OutputType::PushPull, Speed::High, Pull::NoPull); // Configure pin for LED output
@@ -40,18 +40,18 @@ void LedDriver::set(LedState state)
   }
   else
   {
-    port->BRR = (1 << currentPin);  // Reset pin
+    port->BSRR = (1 << (currentPin + 16));  // Reset pin
   }
 }
 
 void LedDriver::set(uint16_t pin, LedState state)
 {
-    if (state == LedState::ON)
-    {
-      port->BSRR = (1 << pin); // Set pin
-    }
-    else
-    {
-      port->BRR = (1 << pin);  // Reset pin
-    }
+  if (state == LedState::ON)
+  {
+    port->BSRR = (1 << pin); // Set pin
+  }
+  else
+  {
+    port->BSRR = (1 << (pin + 16));  // Reset pin
+  }
 }

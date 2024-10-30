@@ -15,7 +15,7 @@ public:
   enum class ButtonState { ON, OFF };
 
   ButtonDriver(GPIO_TypeDef* _port);  // Constructor
-  ButtonDriver(GPIO_TypeDef* _port, uint16_t pin);  // Constructor
+  ButtonDriver(GPIO_TypeDef* _port, uint16_t pin = 13);  // Constructor
 //  virtual void init() override;               // Initialize button (override base class)
 
   ButtonState getState() const;               // Get the current state of the button

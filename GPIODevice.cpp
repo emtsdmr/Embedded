@@ -6,15 +6,27 @@
  */
 
 #include "GPIODevice.h"
+//#include <stdexcept>
+#include "stm32f4xx_hal.h"
 
 GPIODevice::GPIODevice(GPIO_TypeDef* _port)
 {
-  // Validate that the port is valid
-  if (_port != GPIOA && _port != GPIOB && _port != GPIOC) {
-    throw std::invalid_argument("Invalid GPIO port!");
-  }
+  // TODO: Write isValid function to validate that the port is valid
+  //if (_port != GPIOA && _port != GPIOB && _port != GPIOC && _port != GPIOD && _port != GPIOE) {
+  //  throw std::invalid_argument("Invalid GPIO port!");
+  //}
   port = _port;  // Assign if valid
   enableClock();
+}
+
+GPIODevice::GPIODevice(GPIO_TypeDef* _port, uint16_t pin)
+{
+  //if (_port != GPIOA && _port != GPIOB && _port != GPIOC && _port != GPIOD && _port != GPIOE) {
+  //  throw std::invalid_argument("Invalid GPIO port!");
+  //}
+  port = _port;  // Assign if valid
+  enableClock();
+  currentPin = pin;
 }
 
 void GPIODevice::enableClock()
@@ -29,20 +41,29 @@ void GPIODevice::enableClock()
   else if (port == GPIOC) {
     __HAL_RCC_GPIOC_CLK_ENABLE();
   }
-  else {
-      // Handle invalid port or throw an exception
-    throw std::invalid_argument("Invalid GPIO port!");
+  else if (port == GPIOD)
+  {
+      __HAL_RCC_GPIOD_CLK_ENABLE();
   }
-  //TODO: Add others
+  else if (port == GPIOE)
+  {
+      __HAL_RCC_GPIOE_CLK_ENABLE();
+  }
+  //TODO: add an acceptable exception
+  //else {
+  //    // Handle invalid port or throw an exception
+  //  throw std::invalid_argument("Invalid GPIO port!");
+  //}
+
 }
 
 void GPIODevice::configurePin(uint16_t pin, Mode mode, OutputType outputType, Speed speed, Pull pull)
 {
   currentPin = pin;
-  setMode(mode);
-  setOutputType(outputType);
-  setSpeed(speed);
-  setPull(pull);
+  if (mode != Mode::Unchanged) setMode(mode);
+  if (outputType != OutputType::Unchanged) setOutputType(outputType);
+  if (speed != Speed::Unchanged) setSpeed(speed);
+  if (pull != Pull::Unchanged) setPull(pull);
 }
 
 void GPIODevice::setMode(Mode mode)
@@ -56,7 +77,6 @@ void GPIODevice::setMode(Mode mode)
   {
     port->MODER &= ~(3UL << (currentPin * 2)); // Input mode
   }
-  // TODO: Add similar checks for GPIOB and GPIOC and alternate function mode, analog mode
 }
 
 void GPIODevice::setOutputType(OutputType outputType)
