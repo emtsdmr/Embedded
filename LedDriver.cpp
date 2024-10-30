@@ -7,8 +7,8 @@
 
 #include "LedDriver.h"
 
-LedDriver::LedDriver(GPIO_TypeDef* _port)
-    : GPIODevice(_port){}
+//LedDriver::LedDriver(GPIO_TypeDef* _port)
+//    : GPIODevice(_port){}
 LedDriver::LedDriver(GPIO_TypeDef* _port, uint16_t pin)
     : GPIODevice(_port)
 {
