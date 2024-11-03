@@ -7,10 +7,10 @@
 
 #include "ButtonDriver.h"
 
-ButtonDriver::ButtonDriver(GPIO_TypeDef* _port)
-    : GPIODevice(_port){}
-ButtonDriver::ButtonDriver(GPIO_TypeDef* _port, uint16_t pin)
-    : GPIODevice(_port, pin)
+ButtonDriver::ButtonDriver(GPIO_TypeDef* port)
+    : GPIODevice(port){}
+ButtonDriver::ButtonDriver(GPIO_TypeDef* port, uint16_t pin)
+    : GPIODevice(port, pin)
 {
   configurePin(pin, Mode::Input, OutputType::PushPull, Speed::Low, Pull::NoPull);  // Configure pin for button input
 //  init();

@@ -14,12 +14,13 @@ class ButtonDriver: public GPIODevice {
 public:
   enum class ButtonState { ON, OFF };
 
-  ButtonDriver(GPIO_TypeDef* _port);  // Constructor
-  ButtonDriver(GPIO_TypeDef* _port, uint16_t pin = 13);  // Constructor
+  ButtonDriver(GPIO_TypeDef* port);  // Constructor
+  ButtonDriver(GPIO_TypeDef* port, uint16_t pin);  // Constructor
 //  virtual void init() override;               // Initialize button (override base class)
 
   ButtonState getState() const;               // Get the current state of the button
   ButtonState getState(uint16_t pin) const;               // Get the current state of the button
+
 };
 
 #endif /* SRC_BUTTONDRIVER_H_ */

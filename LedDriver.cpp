@@ -7,10 +7,10 @@
 
 #include "LedDriver.h"
 
-//LedDriver::LedDriver(GPIO_TypeDef* _port)
-//    : GPIODevice(_port){}
-LedDriver::LedDriver(GPIO_TypeDef* _port, uint16_t pin)
-    : GPIODevice(_port)
+//LedDriver::LedDriver(GPIO_TypeDef* port)
+//    : GPIODevice(port){}
+LedDriver::LedDriver(GPIO_TypeDef* port, uint16_t pin)
+    : GPIODevice(port)
 {
   configurePin(pin, Mode::Output, OutputType::PushPull, Speed::High, Pull::NoPull); // Configure pin for LED output
 //    init();
