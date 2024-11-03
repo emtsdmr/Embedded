@@ -12,6 +12,13 @@
 
 class GPIODevice {
 public:
+  static constexpr uint8_t GPIOA_EXTI = 0x00;
+  static constexpr uint8_t GPIOB_EXTI = 0x01;
+  static constexpr uint8_t GPIOC_EXTI = 0x02;
+  static constexpr uint8_t GPIOD_EXTI = 0x03;
+  static constexpr uint8_t GPIOE_EXTI = 0x04;
+  // Other members...
+
   enum class Mode { Output, Input, Unchanged }; // TODO: Add alternate function mode, analog mode
   enum class OutputType { PushPull, OpenDrain, Unchanged };
   enum class Speed { Low, Medium, High, Unchanged };
