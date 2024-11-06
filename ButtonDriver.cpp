@@ -48,26 +48,31 @@ ButtonDriver::ButtonState ButtonDriver::getState() const
   }
 }
 
-void ButtonDriver::enableInterrupt(uint16_t pin, uint32_t priority = 1)
+void ButtonDriver::enableInterrupt(uint16_t pin, uint32_t priority)
 {
+  //configurePin(pin, Mode::Input, OutputType::Unchanged, Speed::Unchanged, Pull::NoPull);
   // Enable SYSCFG clock
   __HAL_RCC_SYSCFG_CLK_ENABLE();
 
-  // Use port-specific constants for EXTI configuration
   if (pin <= 15) {
     uint8_t portCode;
-    if (port == GPIOA) portCode = GPIODevice::GPIOA_EXTI;
-    else if (port == GPIOB) portCode = GPIODevice::GPIOB_EXTI;
-    else if (port == GPIOC) portCode = GPIODevice::GPIOC_EXTI;
-    else if (port == GPIOD) portCode = GPIODevice::GPIOD_EXTI;
-    else if (port == GPIOE) portCode = GPIODevice::GPIOE_EXTI;
-    else return;  // Handle unsupported port
+    if (_port == GPIOA) portCode = GPIODevice::GPIOA_EXTI;
+    else if (_port == GPIOB) portCode = GPIODevice::GPIOB_EXTI;
+    else if (_port == GPIOC) portCode = GPIODevice::GPIOC_EXTI;
+    else if (_port == GPIOD) portCode = GPIODevice::GPIOD_EXTI;
+    else if (_port == GPIOE) portCode = GPIODevice::GPIOE_EXTI;
+    else return;  // Unsupported port
 
+    // Clear previous config and set EXTI source
+    SYSCFG->EXTICR[pin / 4] &= ~(0xF << (4 * (pin % 4)));  // Clear bits
     SYSCFG->EXTICR[pin / 4] |= (portCode << (4 * (pin % 4)));
 
     // Enable interrupt mask for the pin and configure trigger
     EXTI->IMR |= (1UL << pin);
     EXTI->FTSR |= (1UL << pin);  // Falling edge trigger
+
+    // Clear any pending interrupt
+    EXTI->PR = (1UL << pin);
 
     // Set priority and enable NVIC interrupt based on pin range
     if (pin >= 5 && pin <= 9) {
@@ -85,6 +90,19 @@ void ButtonDriver::enableInterrupt(uint16_t pin, uint32_t priority = 1)
   }
 }
 
+//extern "C" void EXTI15_10_IRQHandler(void)
+//{
+//    if ((EXTI->PR & EXTI_PR_PR13) != 0) {
+//        EXTI->PR = EXTI_PR_PR13;    // Clear interrupt pending bit for pin 13
+//
+//        for (int i = 0; i < 5; i++) {
+//            HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);  // Set LED ON
+//            HAL_Delay(500);                                      // Delay for 500 ms
+//            HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);// Set LED OFF
+//            HAL_Delay(500);                                      // Delay for 500 ms
+//        }
+//    }
+//}
 //extern "C" void EXTI15_10_IRQHandler(void)
 //{
 //    if ((EXTI->PR & EXTI_PR_PR13) != 0) {
